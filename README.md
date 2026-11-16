@@ -40,6 +40,9 @@ Banque mondiale figées dans `frontend/public/demo/`. Il ne demande aucun serveu
 - **Netlify** : le fichier `netlify.toml` est prêt (publie le mode démonstration, non indexé par les moteurs de recherche).
   À ne publier qu'avec l'accord de la hiérarchie.
 
+Vidéo de démonstration (1 min 30, sous-titrée) : le scénario est dans `frontend/scripts/video-demo.js`
+(enregistrement avec Playwright, conversion MP4 avec ffmpeg) ; il se relance après chaque évolution de l'interface.
+
 Mettre à jour les données de la démonstration (depuis `backend/`, après une mise à jour FMI et Banque mondiale) :
 `.venv/bin/python -m app.cli exporter-demo`. La commande refuse d'exporter si la base contient autre chose que
 des données publiques.
