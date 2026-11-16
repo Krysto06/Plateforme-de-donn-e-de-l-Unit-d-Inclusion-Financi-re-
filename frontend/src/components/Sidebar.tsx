@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import { NavLink } from "react-router-dom";
+import { DEMO } from "../api";
 import { useAuth } from "../auth";
 import {
   IconeCatalogue, IconeConnexion, IconeBouclier, IconeDepot, IconeFermer, IconeRapport, IconeSortie, IconeTableau,
@@ -38,8 +39,10 @@ export default function Sidebar({ ouvert, fermer }: { ouvert: boolean; fermer: (
         <div className="flex flex-col gap-3.5 px-1.5">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 flex-none items-center justify-center rounded-[10px] bg-or text-sm font-bold text-marine">BRH</div>
-              <span className="text-xs leading-snug text-menu">Banque de la République d'Haïti<br />Unité d'Inclusion Financière</span>
+              <div className="flex h-11 w-11 flex-none items-center justify-center rounded-[10px] bg-or text-sm font-bold text-marine">{DEMO ? "PDIF" : "BRH"}</div>
+              <span className="text-xs leading-snug text-menu">
+                {DEMO ? <>Prototype de démonstration<br />non officiel</> : <>Banque de la République d'Haïti<br />Unité d'Inclusion Financière</>}
+              </span>
             </div>
             <button type="button" onClick={fermer} aria-label="Fermer le menu" className="flex h-11 w-11 items-center justify-center rounded-lg text-menu-lien lg:hidden">
               <IconeFermer />
@@ -79,9 +82,9 @@ export default function Sidebar({ ouvert, fermer }: { ouvert: boolean; fermer: (
             <span className="truncate text-sm font-semibold">{utilisateur.nom}</span>
             <span className="truncate text-xs text-menu">{utilisateur.direction?.nom ?? utilisateur.role_libelle}</span>
           </div>
-          <button type="button" onClick={deconnecter} aria-label="Se déconnecter" className="flex h-11 w-11 flex-none items-center justify-center rounded-lg text-menu-lien hover:bg-marine-clair">
+          {!DEMO && <button type="button" onClick={deconnecter} aria-label="Se déconnecter" className="flex h-11 w-11 flex-none items-center justify-center rounded-lg text-menu-lien hover:bg-marine-clair">
             <IconeSortie />
-          </button>
+          </button>}
         </div>
       </aside>
       </div>

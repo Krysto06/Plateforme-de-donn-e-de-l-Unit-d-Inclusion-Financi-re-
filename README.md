@@ -28,6 +28,22 @@ La fiche de mise en œuvre est dans [`CLAUDE.md`](CLAUDE.md).
 
 Tests : 88 tests backend (pytest) et 4 tests interface (Vitest).
 
+## Voir la démonstration (sans rien installer)
+
+Le **mode démonstration** affiche toute l'interface en lecture seule, avec les données publiques du FMI et de la
+Banque mondiale figées dans `frontend/public/demo/`. Il ne demande aucun serveur.
+
+- **StackBlitz** (dans le navigateur) : ouvrir
+  https://stackblitz.com/github/Krysto06/plateforme-de-donn-e-de-l-unit-d-inclusion-financi-re-/tree/main/frontend
+  (si le dépôt est privé, StackBlitz demande de se connecter avec GitHub).
+- **Sur son ordinateur** : `cd frontend && npm install && npm run demo`.
+- **Netlify** : le fichier `netlify.toml` est prêt (publie le mode démonstration, non indexé par les moteurs de recherche).
+  À ne publier qu'avec l'accord de la hiérarchie.
+
+Mettre à jour les données de la démonstration (depuis `backend/`, après une mise à jour FMI et Banque mondiale) :
+`.venv/bin/python -m app.cli exporter-demo`. La commande refuse d'exporter si la base contient autre chose que
+des données publiques.
+
 ## Prérequis
 
 - Python 3.11 ou plus récent, Node.js 20 ou plus récent.

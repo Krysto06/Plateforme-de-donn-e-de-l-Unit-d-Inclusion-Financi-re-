@@ -1,6 +1,32 @@
 // Appels à l'API FastAPI. Le jeton de connexion est gardé pour la session du navigateur.
 const CLE_JETON = "pdif.jeton";
 
+// Mode démonstration (StackBlitz, Netlify) : pas de serveur, données publiques figées dans public/demo/
+export const DEMO = import.meta.env.MODE === "demo";
+
+function fichierDemo(chemin: string): string | null {
+  const [route] = chemin.split("?");
+  const r: [RegExp, (m: RegExpMatchArray) => string][] = [
+    [/^\/api\/tableau-de-bord$/, () => "tableau-de-bord"],
+    [/^\/api\/kpi$/, () => "kpi"],
+    [/^\/api\/kpi\/([^/]+)\/serie$/, (m) => `serie-${m[1]}`],
+    [/^\/api\/kpi\/([^/]+)\/comparaison$/, (m) => `comparaison-${m[1]}`],
+    [/^\/api\/catalogue$/, () => "catalogue"],
+    [/^\/api\/referentiels$/, () => "referentiels"],
+    [/^\/api\/sources$/, () => "sources"],
+    [/^\/api\/sources\/([^/]+)\/historique$/, (m) => `historique-${m[1]}`],
+    [/^\/api\/chargements$/, () => "chargements"],
+    [/^\/api\/chargements\/(\d+)$/, (m) => `chargement-${m[1]}`],
+    [/^\/api\/depots\/parametres$/, () => "depots-parametres"],
+    [/^\/api\/depots$/, () => "depots"],
+  ];
+  for (const [motif, nom] of r) {
+    const m = route.match(motif);
+    if (m) return `/demo/${nom(m)}.json`;
+  }
+  return null;
+}
+
 export class ErreurApi extends Error {
   constructor(public statut: number, message: string) {
     super(message);
@@ -36,6 +62,13 @@ async function messageErreur(r: Response): Promise<string> {
 }
 
 export async function api<T>(chemin: string, options: RequestInit = {}): Promise<T> {
+  if (DEMO) {
+    const fichier = (options.method ?? "GET") === "GET" ? fichierDemo(chemin) : null;
+    if (!fichier) throw new ErreurApi(403, "Non disponible dans la démonstration : cette action demande la version installée sur un serveur.");
+    const r = await fetch(fichier);
+    if (!r.ok) throw new ErreurApi(404, "Donnée absente de la démonstration.");
+    return (await r.json()) as T;
+  }
   const entetes = new Headers(options.headers);
   const jeton = lireJeton();
   if (jeton) entetes.set("Authorization", `Bearer ${jeton}`);
@@ -51,6 +84,17 @@ export async function api<T>(chemin: string, options: RequestInit = {}): Promise
 
 // Téléchargement d'un fichier protégé (export, modèle Excel)
 export async function telecharger(chemin: string, nomParDefaut: string) {
+  if (DEMO) {
+    if (!chemin.startsWith("/api/exports/observations")) {
+      throw new ErreurApi(403, "Non disponible dans la démonstration.");
+    }
+    const format = chemin.includes("format=csv") ? "csv" : "xlsx";
+    const lien = document.createElement("a");
+    lien.href = `/demo/pdif_observations.${format}`;
+    lien.download = `pdif_observations_demo.${format}`;
+    lien.click();
+    return;
+  }
   const jeton = lireJeton();
   const r = await fetch(chemin, { headers: jeton ? { Authorization: `Bearer ${jeton}` } : {} });
   if (!r.ok) throw new ErreurApi(r.status, await messageErreur(r));

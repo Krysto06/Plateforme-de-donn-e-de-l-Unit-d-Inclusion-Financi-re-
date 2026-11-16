@@ -1,5 +1,6 @@
 import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Outlet } from "react-router-dom";
+import { DEMO } from "../api";
 import { IconeMenu } from "./Icones";
 import Sidebar from "./Sidebar";
 
@@ -16,6 +17,12 @@ export default function Layout() {
           </button>
           <span className="text-lg font-bold">PDIF</span>
         </header>
+        {DEMO && (
+          <div role="note" className="border-b border-[#e8c879] bg-[#fff6e0] px-4 py-2.5 text-[13px] text-[#5c4300] sm:px-6 lg:px-10">
+            <strong>Prototype de démonstration non officiel</strong> — lecture seule, données publiques du FMI et de la
+            Banque mondiale figées. Les actions (mises à jour, validation, dépôt) demandent la version installée sur un serveur.
+          </div>
+        )}
         <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
           <main className="mx-auto flex max-w-[1160px] flex-col gap-6">
             <Outlet />

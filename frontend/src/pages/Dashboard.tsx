@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { api, telecharger, type Carte } from "../api";
+import { api, DEMO, telecharger, type Carte } from "../api";
 import { nombre } from "../format";
 import { Bandeau, Bouton, EnTete, Section } from "../components/Layout";
 import { IconeAttention } from "../components/Icones";
@@ -19,10 +19,13 @@ const ANNEES = Array.from({ length: new Date().getFullYear() - 2004 + 1 }, (_, i
 
 function Filtre({ libelle, valeur, onChange, options }:
   { libelle: string; valeur: string; onChange: (v: string) => void; options: [string, string][] }) {
+  // En démonstration, seules les valeurs par défaut sont figées : les filtres sont désactivés
+  if (DEMO) options = options.slice(0, 1);
   return (
     <label className="flex flex-col gap-1 text-xs font-semibold text-discret">
       {libelle}
-      <select className="champ font-normal" value={valeur} onChange={(e) => onChange(e.target.value)}>
+      <select className="champ font-normal" value={valeur} onChange={(e) => onChange(e.target.value)} disabled={DEMO}
+        title={DEMO ? "Filtres disponibles dans la version installée" : undefined}>
         {options.map(([v, t]) => <option key={v} value={v}>{t}</option>)}
       </select>
     </label>

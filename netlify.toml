@@ -1,0 +1,19 @@
+# Netlify : publie le MODE DÉMONSTRATION (lecture seule, données publiques figées). La version complète
+# (API, base, contrôles, dépôts) demande un serveur : voir docs/procedures.md.
+[build]
+  base = "frontend"
+  command = "npm run build:demo"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

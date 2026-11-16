@@ -32,6 +32,8 @@ def main(argv: list[str] | None = None) -> int:
     f = sous.add_parser("importer-ihsi", help="Importer un fichier de population de l'IHSI")
     f.add_argument("fichier")
     sous.add_parser("chargements", help="Lister les derniers chargements")
+    d = sous.add_parser("exporter-demo", help="Figer les données publiques pour le mode démonstration de l'interface")
+    d.add_argument("dossier", nargs="?", default="../frontend/public/demo")
     args = p.parse_args(argv)
 
     with SessionLocal() as session:
@@ -77,6 +79,11 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Chargement #{c.id} : {c.statut} — {c.message}")
             for k in c.controles:
                 print(f"  [{k.resultat:7}] {k.regle} : {k.detail[:200]}")
+        elif args.commande == "exporter-demo":
+            from app.services.demo import exporter_demo
+
+            for chemin in exporter_demo(session, Path(args.dossier)):
+                print(f"  {chemin}")
         elif args.commande == "chargements":
             from app.models import Chargement
 
