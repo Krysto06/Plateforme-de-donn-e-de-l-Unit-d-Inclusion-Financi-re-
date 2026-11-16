@@ -156,7 +156,7 @@ Ce référentiel est provisoire : il sera validé avec le cadre de l'UIF chargé
 
 ### 8.1 Banque mondiale (à faire en premier : c'est le plus simple)
 - API Indicators v2, sans clé : `https://api.worldbank.org/v2/country/{pays}/indicator/{code}?format=json&per_page=1000`
-- Pays : Haïti (HTI), plus les comparateurs République dominicaine (DOM), Jamaïque (JAM), Nicaragua (NIC) et le reste de l'Amérique latine et des Caraïbes.
+- Pays : Haïti (HTI), plus les comparateurs République dominicaine (DOM), Jamaïque (JAM), Nicaragua (NIC), Brésil (BRA), France (FRA) et Canada (CAN) (décision de Krystofia du 16/11/2026 ; la liste est réglable dans `.env`, variable `PAYS_COMPARAISON`).
 - Codes repérés, **à vérifier par l'API avant usage** : `FB.CBK.BRCH.P5` (agences pour 100 000 adultes), `FB.ATM.TOTL.P5` (distributeurs), `FB.CBK.DPTR.P3` (déposants pour 1 000 adultes), `FB.CBK.BRWR.P3` (emprunteurs), `FX.OWN.TOTL.ZS` (détention de compte, Findex).
 - Gérer la pagination, les valeurs nulles, les erreurs réseau (3 essais avec attente) et l'idempotence (relancer ne crée pas de doublons).
 
