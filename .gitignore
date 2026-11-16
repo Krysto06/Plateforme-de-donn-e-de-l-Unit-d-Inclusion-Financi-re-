@@ -1,0 +1,22 @@
+# Secrets
+.env
+.env.*
+!.env.example
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+# Bases locales et données (jamais de données dans le dépôt)
+*.db
+*.sqlite
+*.sqlite3
+data/
+# Node
+node_modules/
+frontend/dist/
+# Divers
+.DS_Store
+.vscode/
+.idea/
+*.tsbuildinfo

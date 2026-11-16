@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Couleurs de la PDIF utilisables en classes Tailwind : bg-marine, text-or, etc. */
+@theme {
+  --color-marine: #1a365d;
+  --color-or: #b8860b;
+  --color-fond: #eef3f9;
+  --color-texte: #1b2433;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-fond);
+  color: var(--color-texte);
+  font-family: var(--font-sans);
+}
