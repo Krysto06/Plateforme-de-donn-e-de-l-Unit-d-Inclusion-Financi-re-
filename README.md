@@ -16,7 +16,7 @@ La fiche de mise en œuvre est dans [`CLAUDE.md`](CLAUDE.md).
 | 1 | Dépôt, structure, environnement | ✅ |
 | 2 | Modèle de données et migrations (16 tables) | ✅ |
 | 3 | Référentiel KPI (19 KPI + 3 séries auxiliaires), modifiable sans code | ✅ |
-| 4 | Connecteur Banque mondiale (HTI + DOM, JAM, NIC, BRA, FRA, CAN) | ✅ valeurs de contrôle retrouvées |
+| 4 | Connecteur Banque mondiale (HTI + DOM, JAM, NIC, BRA, FRA, CAN + agrégat LCN) | ✅ valeurs de contrôle retrouvées |
 | 5 | Connecteur FMI FAS (SDMX 3.0) | ✅ valeurs de contrôle retrouvées |
 | 6 | Import IHSI (population) | ✅ testé sur un fichier **fictif** |
 | 7 | Moteur de contrôle qualité (6 règles) | ✅ |
@@ -131,6 +131,7 @@ docs/                         sources.md, dictionnaire.md, kpi.md, procedures.md
 | `DATABASE_URL` | Base de données | `sqlite:///./pdif.db` (PostgreSQL sur le serveur BRH) |
 | `SECRET_KEY` | Signature des sessions (obligatoire, 32 caractères au moins) | — |
 | `PAYS_COMPARAISON` | Pays comparés à Haïti | `DOM,JAM,NIC,BRA,FRA,CAN` |
+| `AGREGATS_REGIONAUX` | Moyennes régionales de la Banque mondiale | `LCN` (Amérique latine et Caraïbes) |
 | `HTTP_TIMEOUT_SECONDES`, `HTTP_ESSAIS` | Patience envers les API | 25 s, 5 essais |
 | `PLANIFICATION_ACTIVE` | Mises à jour automatiques | `false` |
 | `DEPOTS_DIRECTIONS_OUVERTS` | Ouvre le dépôt des directions (seulement sur le serveur BRH) | `false` |

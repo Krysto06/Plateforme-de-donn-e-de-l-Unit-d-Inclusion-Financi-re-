@@ -12,7 +12,7 @@ import { theme } from "../theme";
 type TableauDeBord = { cartes: Carte[]; resume: { kpi_total: number; kpi_disponibles: number } };
 type Serie = { libelle: string; unite: string; points: { annee: number; valeur: number; source: string }[] };
 type Comparaison = { libelle: string; unite: string; source: string | null; annee: number | null;
-  pays: { pays: string; nom: string; annee: number; valeur: number; principal: boolean }[] };
+  pays: { pays: string; nom: string; annee: number; valeur: number; principal: boolean; agregat: boolean }[] };
 type Departement = { code: string; nom: string };
 
 const ANNEES = Array.from({ length: new Date().getFullYear() - 2004 + 1 }, (_, i) => new Date().getFullYear() - i);
@@ -70,7 +70,8 @@ export default function Dashboard() {
   }, [serie, carteChoisie, annee]);
 
   const maxComparaison = Math.max(...(comparaison?.pays?.map((p) => p.valeur) ?? [1]), 1);
-  const rangHaiti = comparaison?.pays ? [...comparaison.pays].reverse().findIndex((p) => p.principal) + 1 : 0;
+  const paysSeuls = comparaison?.pays?.filter((p) => !p.agregat) ?? [];
+  const rangHaiti = [...paysSeuls].reverse().findIndex((p) => p.principal) + 1;
 
   return (
     <>
@@ -136,17 +137,20 @@ export default function Dashboard() {
                 {[...comparaison.pays].reverse().map((p) => (
                   <li key={p.pays} className="flex flex-col gap-1.5">
                     <div className="flex justify-between gap-3 text-sm">
-                      <span className={p.principal ? "font-semibold" : ""}>{p.nom} <span className="text-xs text-discret">({p.annee})</span></span>
+                      <span className={p.principal ? "font-semibold" : ""}>{p.agregat ? "Moyenne Amérique latine et Caraïbes" : p.nom} <span className="text-xs text-discret">({p.annee}{p.agregat ? ", agrégat régional" : ""})</span></span>
                       <span className={p.principal ? "font-semibold" : ""}>{nombre(p.valeur, comparaison.unite)}</span>
                     </div>
                     <div className="h-3.5 rounded-[7px] bg-fond">
                       <div className="h-3.5 rounded-[7px]" style={{ width: `${Math.max(2, (p.valeur / maxComparaison) * 100)}%`,
-                        background: p.principal ? theme.couleurs.or : theme.couleurs.contexte }} />
+                        background: p.principal ? theme.couleurs.or : p.agregat
+                          ? `repeating-linear-gradient(45deg, ${theme.couleurs.marine} 0 4px, ${theme.couleurs.contexte} 4px 8px)`
+                          : theme.couleurs.contexte }} />
                     </div>
                   </li>
                 ))}
               </ul>
-              {rangHaiti > 0 && <span className="text-xs text-discret">Haïti est {rangHaiti}<sup>e</sup> sur {comparaison.pays.length} pays comparés.</span>}
+              {rangHaiti > 0 && <span className="text-xs text-discret">Haïti est {rangHaiti}<sup>e</sup> sur {paysSeuls.length} pays comparés
+                {comparaison.pays.some((p) => p.agregat) ? " (barre hachurée : moyenne régionale de la Banque mondiale, hors classement)" : ""}.</span>}
             </>
           )}
         </Section>

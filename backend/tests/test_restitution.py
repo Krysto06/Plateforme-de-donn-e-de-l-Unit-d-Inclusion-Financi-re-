@@ -84,3 +84,23 @@ def test_source_a_jour_puis_en_retard(client, session, comptes, faux_reseau):
     session.commit()
     etat = client.get("/api/sources/FMI", headers=h).json()
     assert etat["en_retard"] and etat["statut"] == "en retard"
+
+
+def test_agregat_regional_charge_depuis_la_banque_mondiale(session, faux_reseau):
+    charger(session, "WB", faux_reseau)
+    from tests.conftest import valeur
+
+    assert valeur(session, "ACC-01", "WB", 2020, pays="LCN") is not None
+
+
+def test_agregat_regional_dans_la_comparaison_et_signale(client, comptes, donnees):
+    r = client.get("/api/kpi/ACC-01/comparaison?source=WB", headers=entetes(client, comptes["cadre"])).json()
+    lcn = next(p for p in r["pays"] if p["pays"] == "LCN")
+    assert lcn["agregat"] is True and not lcn["principal"]
+    assert all(not p["agregat"] for p in r["pays"] if p["pays"] != "LCN")
+
+
+def test_le_fmi_ne_demande_pas_l_agregat(session):
+    from app.config import get_settings
+
+    assert "LCN" not in get_settings().tous_les_pays and "LCN" in get_settings().pays_banque_mondiale

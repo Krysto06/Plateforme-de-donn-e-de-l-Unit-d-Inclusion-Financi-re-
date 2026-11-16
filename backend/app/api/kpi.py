@@ -231,7 +231,8 @@ def comparaison(code: str, annee: int | None = None, source: str | None = None,
     ind = _kpi(session, code)
     reglages = get_settings()
     requete = _requete_obs().where(Indicateur.id == ind.id, Observation.sexe == "Total",
-                                   Observation.departement_id.is_(None), Pays.code_iso3.in_(reglages.tous_les_pays))
+                                   Observation.departement_id.is_(None),
+                                   Pays.code_iso3.in_(reglages.tous_les_pays + reglages.agregats))
     lignes = session.execute(requete).all()
     sources = sorted({l.source for l in lignes})
     if not sources:
@@ -243,7 +244,8 @@ def comparaison(code: str, annee: int | None = None, source: str | None = None,
         if l.code_iso3 not in derniere or l.annee > derniere[l.code_iso3].annee:
             derniere[l.code_iso3] = l
     pays = sorted(({"pays": l.code_iso3, "nom": l.nom, "annee": l.annee, "valeur": l.valeur,
-                    "principal": l.code_iso3 == reglages.pays_principal} for l in derniere.values()),
+                    "principal": l.code_iso3 == reglages.pays_principal,
+                    "agregat": l.code_iso3 in reglages.agregats} for l in derniere.values()),
                   key=lambda p: p["valeur"])
     return {"code": code, "libelle": ind.libelle, "unite": ind.unite, "source": choix, "sources_disponibles": sources,
             "annee": max((p["annee"] for p in pays), default=None), "pays": pays}

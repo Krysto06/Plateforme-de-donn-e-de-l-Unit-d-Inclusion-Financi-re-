@@ -9,7 +9,10 @@ vérifié auprès de l'API et noté ici avec sa date. Les correspondances sont e
 - Adresse : `https://api.worldbank.org/v2/country/{pays;pays;...}/indicator/{code}?format=json&per_page=1000&date=AAAA:AAAA&page=n`
 - Vérifié le **16/11/2026** en interrogeant `https://api.worldbank.org/v2/indicator/{code}?format=json`.
 - Pays demandés : HTI, DOM, JAM, NIC, BRA, FRA, CAN (réglable : `PAYS_COMPARAISON` dans `.env`).
-- Agrégat régional disponible si besoin : `LCN` (Amérique latine et Caraïbes), vérifié le 16/11/2026 ; **non activé**.
+- Agrégat régional : `LCN` (Amérique latine et Caraïbes), vérifié le 16/11/2026 par `https://api.worldbank.org/v2/country/LCN?format=json` ;
+  **activé** le 16/11/2026 à la demande de Krystofia (`AGREGATS_REGIONAUX` dans `.env`). Le FMI ne publie pas
+  d'agrégats dans la FAS : LCN n'est demandé qu'à la Banque mondiale. Il apparaît dans la comparaison du tableau de
+  bord (barre hachurée) mais n'entre pas dans le classement d'Haïti.
 
 | Code | Libellé renvoyé par l'API | KPI | Vérifié le |
 | --- | --- | --- | --- |

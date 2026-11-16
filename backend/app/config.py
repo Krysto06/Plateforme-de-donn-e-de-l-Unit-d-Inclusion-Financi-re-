@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     # Pays suivis : Haïti + comparateurs (décision du 16/11/2026)
     pays_principal: str = "HTI"
     pays_comparaison: str = "DOM,JAM,NIC,BRA,FRA,CAN"
+    # Agrégats régionaux de la Banque mondiale (le FMI n'en publie pas). LCN = Amérique latine et Caraïbes.
+    agregats_regionaux: str = "LCN"
 
     # API publiques (adresses vérifiées le 16/11/2026, voir docs/sources.md)
     wb_base_url: str = "https://api.worldbank.org/v2"
@@ -43,6 +45,15 @@ class Settings(BaseSettings):
     def tous_les_pays(self) -> list[str]:
         autres = [p.strip().upper() for p in self.pays_comparaison.split(",") if p.strip()]
         return [self.pays_principal.upper(), *[p for p in autres if p != self.pays_principal.upper()]]
+
+    @property
+    def agregats(self) -> list[str]:
+        return [p.strip().upper() for p in self.agregats_regionaux.split(",") if p.strip()]
+
+    @property
+    def pays_banque_mondiale(self) -> list[str]:
+        """Pays + agrégats régionaux : seule la Banque mondiale publie ces agrégats."""
+        return [*self.tous_les_pays, *[a for a in self.agregats if a not in self.tous_les_pays]]
 
 
 @lru_cache

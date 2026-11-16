@@ -59,7 +59,7 @@ class ConnecteurBanqueMondiale(ConnecteurAPI):
         return ResultatTest(ok, "Connexion réussie, codes vérifiés." if ok else "Connexion réussie, mais des codes sont inconnus.", details)
 
     def extraire(self) -> pd.DataFrame:
-        pays = ";".join(self.reglages.tous_les_pays)
+        pays = ";".join(self.reglages.pays_banque_mondiale)
         params = {"format": "json", "per_page": 1000, "date": f"{self.reglages.annee_debut}:{date.today().year}"}
         lignes = []
         for serie in self._series():
